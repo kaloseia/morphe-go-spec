@@ -11,42 +11,42 @@ This document specifies how Morphe (KAMO1) models are transpiled into Go structs
 Input (.mod file):
 
 ```yaml
-    name: Person
-    fields:
-      ID:
-        type: AutoIncrement
-        attributes:
-          - mandatory
-      FirstName:
-        type: String
-      LastName:
-        type: String
-    identifiers:
-      primary: ID
-      name:
-        - FirstName
-        - LastName
+name: Person
+fields:
+  ID:
+    type: AutoIncrement
+    attributes:
+      - mandatory
+  FirstName:
+    type: String
+  LastName:
+    type: String
+identifiers:
+  primary: ID
+  name:
+    - FirstName
+    - LastName
 ```
 
 Output (.go):
 
 ```go
-    package models
+package models
 
-    type Person struct {
-        ID        uint   
-        FirstName string 
-        LastName  string 
-    }
+type Person struct {
+    ID        uint   
+    FirstName string 
+    LastName  string 
+}
 
-    type PersonIDPrimary struct {
-        ID uint
-    }
+type PersonIDPrimary struct {
+    ID uint
+}
 
-    type PersonIDName struct {
-        FirstName string
-        LastName  string
-    }
+type PersonIDName struct {
+    FirstName string
+    LastName  string
+}
 ```
 
 ### HasOne Relationship
@@ -54,34 +54,34 @@ Output (.go):
 Input (.mod file):
 
 ```yaml
-    name: Person
-    fields:
-      ID:
-        type: AutoIncrement
-      Name:
-        type: String
-    identifiers:
-      primary: ID
-    related:
-      ContactInfo:
-        type: HasOne
+name: Person
+fields:
+  ID:
+    type: AutoIncrement
+  Name:
+    type: String
+identifiers:
+  primary: ID
+related:
+  ContactInfo:
+    type: HasOne
 ```
 
 Output (.go):
 
 ```go
-    package models
+package models
 
-    type Person struct {
-        ID            uint
-        Name          string
-        ContactInfoID *uint
-        ContactInfo   *ContactInfo
-    }
+type Person struct {
+    ID            uint
+    Name          string
+    ContactInfoID *uint
+    ContactInfo   *ContactInfo
+}
 
-    type PersonIDPrimary struct {
-        ID uint
-    }
+type PersonIDPrimary struct {
+    ID uint
+}
 ```
 
 ### HasMany Relationship
@@ -89,34 +89,34 @@ Output (.go):
 Input (.mod file):
 
 ```yaml
-    name: Company
-    fields:
-      ID:
-        type: AutoIncrement
-      Name:
-        type: String
-    identifiers:
-      primary: ID
-    related:
-      Person:
-        type: HasMany
+name: Company
+fields:
+  ID:
+    type: AutoIncrement
+  Name:
+    type: String
+identifiers:
+  primary: ID
+related:
+  Person:
+    type: HasMany
 ```
 
 Output (.go):
 
 ```go
-    package models
+package models
 
-    type Company struct {
-        ID        uint
-        Name      string
-        PersonIDs []uint
-        Persons   []Person
-    }
+type Company struct {
+    ID        uint
+    Name      string
+    PersonIDs []uint
+    Persons   []Person
+}
 
-    type CompanyIDPrimary struct {
-        ID uint
-    }
+type CompanyIDPrimary struct {
+    ID uint
+}
 ```
 
 ### ForOne Relationship
@@ -124,34 +124,34 @@ Output (.go):
 Input (.mod file):
 
 ```yaml
-    name: ContactInfo
-    fields:
-      ID:
-        type: AutoIncrement
-      Email:
-        type: String
-    identifiers:
-      primary: ID
-    related:
-      Person:
-        type: ForOne
+name: ContactInfo
+fields:
+  ID:
+    type: AutoIncrement
+  Email:
+    type: String
+identifiers:
+  primary: ID
+related:
+  Person:
+    type: ForOne
 ```
 
 Output (.go):
 
 ```go
-    package models
+package models
 
-    type ContactInfo struct {
-        ID       uint
-        Email    string
-        PersonID *uint
-        Person   *Person
-    }
+type ContactInfo struct {
+    ID       uint
+    Email    string
+    PersonID *uint
+    Person   *Person
+}
 
-    type ContactInfoIDPrimary struct {
-        ID uint
-    }
+type ContactInfoIDPrimary struct {
+    ID uint
+}
 ```
 
 ## Enumerations
@@ -159,26 +159,26 @@ Output (.go):
 Input (.enum file):
 
 ```yaml
-    name: Nationality
-    type: String
-    entries:
-      US: 'American'
-      DE: 'German'
-      FR: 'French'
+name: Nationality
+type: String
+entries:
+  US: 'American'
+  DE: 'German'
+  FR: 'French'
 ```
 
 Output (.go):
 
 ```go
-    package enums
+package enums
 
-    type Nationality string
+type Nationality string
 
-    const (
-        NationalityUS Nationality = "American"
-        NationalityDE Nationality = "German"
-        NationalityFR Nationality = "French"
-    )
+const (
+    NationalityUS Nationality = "American"
+    NationalityDE Nationality = "German"
+    NationalityFR Nationality = "French"
+)
 ```
 
 ## Structures
@@ -186,29 +186,29 @@ Output (.go):
 Input (.str file):
 
 ```yaml
-    name: Address
-    fields:
-      Street:
-        type: String
-      HouseNr:
-        type: String
-      ZipCode:
-        type: String
-      City:
-        type: String
+name: Address
+fields:
+  Street:
+    type: String
+  HouseNr:
+    type: String
+  ZipCode:
+    type: String
+  City:
+    type: String
 ```
 
 Output (.go):
 
 ```go
-    package structures
+package structures
 
-    type Address struct {
-        Street  string
-        HouseNr string
-        ZipCode string
-        City    string
-    }
+type Address struct {
+    Street  string
+    HouseNr string
+    ZipCode string
+    City    string
+}
 ```
 
 ## Entities
@@ -220,47 +220,47 @@ Entities are high-level business objects that can combine and transform fields f
 Input (.ent file):
 
 ```yaml
-    name: Person
-    fields:
-      ID:
-        type: Person.ID
-        attributes:
-          - immutable
-          - mandatory
-      LastName:
-        type: Person.LastName
-      Nationality:
-        type: Person.Nationality
-      Email:
-        type: Person.ContactInfo.Email
-    identifiers:
-      primary: ID
-    related:
-      Company:
-        type: ForOne
+name: Person
+fields:
+  ID:
+    type: Person.ID
+    attributes:
+      - immutable
+      - mandatory
+  LastName:
+    type: Person.LastName
+  Nationality:
+    type: Person.Nationality
+  Email:
+    type: Person.ContactInfo.Email
+identifiers:
+  primary: ID
+related:
+  Company:
+    type: ForOne
 ```
 
 Output (.go):
 
 ```go
-    package entities
+package entities
 
-    import (
-        "github.com/org/pkg/enums"
-    )
+import (
+    "github.com/org/pkg/enums"
+)
 
-    type Person struct {
-        ID          uint
-        LastName    string
-        Nationality enums.Nationality
-        Email       string
-        CompanyID   *uint
-        Company     *Company
-    }
+type Person struct {
+    ID          uint
+    LastName    string
+    Nationality enums.Nationality
+    Email       string
+    CompanyID   *uint
+    Company     *Company
+}
 
-    type PersonIDPrimary struct {
-        ID uint
-    }
+type PersonIDPrimary struct {
+    ID uint
+}
 ```
 
 ## Type Mappings
@@ -280,7 +280,7 @@ Sealed | string
 
 ## Contributing
 
-See the main KAMO1 specification for contribution guidelines.
+See the main [Morphe KAMO1 specification](https://github.com/kaloseia/morphe-spec) for contribution guidelines.
 
 ## License
 
