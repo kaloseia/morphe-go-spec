@@ -1,8 +1,8 @@
-# Go Transpilation Standard (KAMO1-GO1)
+# Go Transpilation Standard (KA:MO1:YAML1->GO1)
 
 ## Overview
 
-This document specifies how Morphe (KAMO1) models are transpiled into Go structs and types. The KAMO1-GO1 standard ensures consistent and predictable Go output across projects.
+This document specifies how Morphe (KA:MO1:YAML1) models are transpiled into Go structs and types. The KA:MO1:YAML1->GO1 standard ensures consistent and predictable Go output across projects.
 
 ## Models
 
@@ -280,7 +280,7 @@ Sealed | string
 
 ## Contributing
 
-See the main [Morphe KAMO1 specification](https://github.com/kaloseia/morphe-spec) for contribution guidelines.
+See the main [Morphe KA:MO1 specification](https://github.com/kaloseia/morphe-spec) for contribution guidelines.
 
 ## License
 
